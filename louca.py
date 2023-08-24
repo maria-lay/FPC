@@ -74,52 +74,64 @@ class Fila(Lista):
             if self.inicio.prox is None:
                 self.fim = None
             else:
-                self.inicio.prox._ant = None
+                self.inicio.prox.ant = None
             self.inicio = self.inicio.prox
 
     def comparar_cartas(self, carta):
-        i = self.inicio
-        j = carta.inicio
-        if str(i) == str(j):
+        if str(self.inicio) == str(carta.inicio):
             carta.remover_do_inicio()
         else:
-            if carta.inicio.prox is not None:
-                carta.inserir_no_fim(j)
-                carta.remover_do_inicio()
+            carta.inserir_no_fim(carta.inicio.dado)
+            carta.remover_do_inicio()
 
 
-qtd_festa = int(input())
-cartas_dos_convidados = []
-for i in range(qtd_festa):
-    cartas_mesa = list(map(int, input().split()))
-    lista_temporaria = cartas_mesa
-    cartas_mesa = Fila()
-    for j in lista_temporaria:
-        cartas_mesa.inserir_no_fim(j)
-    qtd_jogadores = 0
-    while True:
-        convidado_atual = list(map(int, input().split()))
-        if convidado_atual[0] != -1:
-            cartas_dos_convidados.append(Fila())
-            for j in convidado_atual:
-                cartas_dos_convidados[-1].inserir_no_fim(j)
-            qtd_jogadores += 1
-        else:
-            break
-    j = True  # para rodar o while
-    qtd_rodadas = 0  # para contar as rodadas
-    while j:
-        qtd_rodadas += 1
-        if qtd_rodadas == 1000:
-            print(0)
-            break
-        for i in range(qtd_jogadores):
-            cartas_mesa.comparar_cartas(cartas_dos_convidados[i])
-            if cartas_dos_convidados[i].isvazia():
-                print(i + 1)
-                j = False
+def main():
+    qtd_festa = int(input())
+
+    for _ in range(qtd_festa):
+        cartas_mesa = list(map(int, input().split()))
+        lista_temporaria = cartas_mesa.copy()
+        cartas_mesa = Fila()
+        for j in lista_temporaria:
+            cartas_mesa.inserir_no_fim(j)
+
+        qtd_jogadores = 0
+        cartas_dos_convidados = []
+
+        while True:
+            convidado_atual = list(map(int, input().split()))
+            if convidado_atual[0] != -1:
+                cartas_convidado = Fila()
+                for j in convidado_atual:
+                    cartas_convidado.inserir_no_fim(j)
+                cartas_dos_convidados.append(cartas_convidado)
+                qtd_jogadores += 1
+            else:
                 break
-        cartas_mesa.inserir_no_fim(cartas_mesa.inicio)
-        cartas_mesa.remover_do_inicio()
-    cartas_mesa = list()
-    cartas_dos_convidados = list()
+
+        qtd_rodadas = 0
+        ganhador = None
+
+        while qtd_rodadas < 1000:
+            qtd_rodadas += 1
+
+            for i in range(qtd_jogadores):
+                cartas_mesa.comparar_cartas(cartas_dos_convidados[i])
+                if cartas_dos_convidados[i].isvazia():
+                    ganhador = i + 1
+                    break
+
+            if ganhador is not None:
+                break
+
+            cartas_mesa.inserir_no_fim(cartas_mesa.inicio.dado)
+            cartas_mesa.remover_do_inicio()
+
+        if ganhador is None:
+            print(0)
+        else:
+            print(ganhador)
+
+
+if __name__ == "__main__":
+    main()
