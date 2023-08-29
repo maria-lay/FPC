@@ -114,6 +114,7 @@ def verificar_se_definida(cadeia):
 
 def main():
     instancias = int(input())
+
     for _ in range(instancias):
         cadeia = input()
         print(verificar_se_definida(cadeia))
