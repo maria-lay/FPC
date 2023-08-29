@@ -122,7 +122,7 @@ while True:
             pilha_atual.push(novo_token)
         elif token == '/':
             operando_1, operando_2 = desempilhar_2_operandos(pilha_atual)
-            novo_token = round(operando_1 / operando_2) - 1
+            novo_token = int(operando_1 / operando_2)
             pilha_atual.push(novo_token)
         else:
             pilha_atual.push(token)
